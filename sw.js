@@ -1,4 +1,4 @@
-const CACHE = "soundboard-v6";
+const CACHE = "soundboard-v7";
 const SHELL = ["./index.html", "./icon.svg", "./sw.js"];
 
 self.addEventListener("install", (e) => {
@@ -24,10 +24,6 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
-function shouldCache(res) {
-  return res.ok || res.type === "opaque";
-}
-
 async function matchCached(request) {
   const hit = await caches.match(request);
   if (hit) return hit;
@@ -45,6 +41,7 @@ async function matchCached(request) {
 
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  if (new URL(e.request.url).origin !== self.location.origin) return;
   e.respondWith(
     matchCached(e.request).then((cached) => {
       if (cached) {
@@ -66,7 +63,7 @@ self.addEventListener("fetch", (e) => {
         return cached;
       }
       return fetch(e.request).then((res) => {
-        if (shouldCache(res)) {
+        if (res.ok) {
           const copy = res.clone();
           caches.open(CACHE).then((c) => c.put(e.request, copy));
         }
