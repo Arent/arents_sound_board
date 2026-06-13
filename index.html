@@ -97,7 +97,11 @@ const BASE="https://www.myinstants.com/media/sounds/";
 const waves='<div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div>';
 document.getElementById("board").innerHTML=GROUPS.map(g=>'<section class="group"><details open><summary class="group-title">'+g.t+'</summary><div class="grid">'+g.s.map(([k,i,t,f])=>'<button type="button" class="card" data-key="'+k+'" data-sound="'+BASE+f+'"><div class="card-top"><span class="card-icon">'+i+'</span><span class="key">'+k.toUpperCase()+'</span></div><h3 class="card-title">'+t+'</h3>'+waves+'</button>').join("")+"</div></details></section>").join("");
 const c=new Map();
-function p(el){const k=el.dataset.key;if(!c.has(k))c.set(k,new Audio(el.dataset.sound));const a=c.get(k);a.currentTime=0;a.play();el.classList.add("playing");setTimeout(()=>el.classList.remove("playing"),300)}
+function p(el){
+const k=el.dataset.key;
+if(!c.has(k)){const a=new Audio(el.dataset.sound);a.preload="auto";c.set(k,a)}
+const a=c.get(k);a.currentTime=0;a.play().catch(()=>{});
+el.classList.add("playing");setTimeout(()=>el.classList.remove("playing"),300)}
 document.getElementById("board").addEventListener("click",e=>{const el=e.target.closest(".card");if(el)p(el)});
 document.addEventListener("keydown",e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;const el=document.querySelector('.card[data-key="'+e.key.toLowerCase()+'"]');if(el){e.preventDefault();p(el)}});
 if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js");
