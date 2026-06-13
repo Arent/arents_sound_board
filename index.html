@@ -52,9 +52,26 @@ header p {
     margin: 0;
 }
 
+.group {
+    margin: 0;
+}
+
+.group + .group {
+    margin-top: 4px;
+}
+
+.group details > summary {
+    list-style: none;
+}
+
+.group details > summary::-webkit-details-marker {
+    display: none;
+}
+
 .group-title {
     align-items: center;
     color: var(--muted);
+    cursor: pointer;
     display: flex;
     font-size: 0.7rem;
     font-weight: 700;
@@ -62,6 +79,25 @@ header p {
     letter-spacing: 0.12em;
     margin: 18px 0 8px;
     text-transform: uppercase;
+    user-select: none;
+}
+
+.group-title::before {
+    color: var(--accent);
+    content: "▸";
+    display: inline-block;
+    flex-shrink: 0;
+    font-size: 0.65rem;
+    transition: transform 150ms ease;
+    width: 0.8em;
+}
+
+.group details[open] > .group-title::before {
+    transform: rotate(90deg);
+}
+
+.group-title:hover {
+    color: var(--text);
 }
 
 .group-title::after {
@@ -69,6 +105,12 @@ header p {
     content: "";
     flex: 1;
     height: 1px;
+}
+
+.group-title:focus-visible {
+    border-radius: 4px;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }
 
 .grid {
@@ -80,8 +122,14 @@ header p {
     width: 100%;
 }
 
+@media (max-width: 540px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 .card {
-    align-items: center;
+    align-items: stretch;
     appearance: none;
     background: var(--surface);
     border: 1px solid var(--border);
@@ -89,15 +137,22 @@ header p {
     color: inherit;
     cursor: pointer;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     font: inherit;
-    gap: 8px;
+    gap: 4px;
     min-height: 40px;
     outline: none;
-    padding: 6px 10px;
+    padding: 6px 8px;
     position: relative;
     text-align: left;
     transition: background 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+}
+
+.card-top {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .card:hover {
@@ -136,10 +191,9 @@ header p {
 }
 
 .card-title {
-    flex: 1;
     font-size: 0.72rem;
     font-weight: 600;
-    line-height: 1.15;
+    line-height: 1.2;
     margin: 0;
     min-width: 0;
 }
@@ -175,10 +229,10 @@ header p {
     display: flex;
     gap: 2px;
     justify-content: center;
-    left: auto;
+    left: 50%;
     opacity: 0;
     position: absolute;
-    right: 36px;
+    transform: translateX(-50%);
     transition: opacity 150ms ease;
 }
 
@@ -273,14 +327,23 @@ const audioCache = new Map();
 const cards = [];
 
 for (const group of groups) {
-    const heading = document.createElement("h2");
-    heading.className = "group-title";
-    heading.textContent = group.title;
-    board.appendChild(heading);
+    const section = document.createElement("section");
+    section.className = "group";
+
+    const details = document.createElement("details");
+    details.open = true;
+
+    const summary = document.createElement("summary");
+    summary.className = "group-title";
+    summary.textContent = group.title;
 
     const grid = document.createElement("div");
     grid.className = "grid";
-    board.appendChild(grid);
+
+    details.appendChild(summary);
+    details.appendChild(grid);
+    section.appendChild(details);
+    board.appendChild(section);
 
     for (const sound of group.sounds) {
         const card = document.createElement("button");
@@ -289,9 +352,11 @@ for (const group of groups) {
         card.dataset.key = sound.key;
         card.dataset.sound = sound.url;
         card.innerHTML = `
-            <span class="card-icon">${sound.icon}</span>
+            <div class="card-top">
+                <span class="card-icon">${sound.icon}</span>
+                <span class="key">${sound.key.toUpperCase()}</span>
+            </div>
             <h3 class="card-title">${sound.title}</h3>
-            <span class="key">${sound.key.toUpperCase()}</span>
             <div class="waves" aria-hidden="true">
                 <span></span><span></span><span></span><span></span>
             </div>
