@@ -2,403 +2,58 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Arent's Soundboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; }
-
-:root {
-    --bg: #0c0a14;
-    --surface: rgba(255, 255, 255, 0.04);
-    --surface-hover: rgba(255, 255, 255, 0.08);
-    --border: rgba(255, 255, 255, 0.08);
-    --text: #f0eef5;
-    --muted: #8b849c;
-    --accent: #a78bfa;
-    --accent-glow: rgba(167, 139, 250, 0.35);
-}
-
-body {
-    background: var(--bg);
-    background-image:
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 80, 220, 0.25), transparent),
-        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(236, 72, 153, 0.12), transparent);
-    color: var(--text);
-    font-family: "DM Sans", system-ui, sans-serif;
-    margin: 0;
-    min-height: 100vh;
-    padding: 20px 16px 32px;
-    touch-action: manipulation;
-}
-
-header {
-    margin: 0 auto 12px;
-    max-width: none;
-    text-align: center;
-}
-
-header h1 {
-    font-size: clamp(1.4rem, 3vw, 1.75rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin: 0 0 6px;
-}
-
-header p {
-    color: var(--muted);
-    font-size: 0.85rem;
-    margin: 0;
-}
-
-.group {
-    margin: 0;
-}
-
-.group + .group {
-    margin-top: 4px;
-}
-
-.group details > summary {
-    list-style: none;
-}
-
-.group details > summary::-webkit-details-marker {
-    display: none;
-}
-
-.group-title {
-    align-items: center;
-    color: var(--muted);
-    cursor: pointer;
-    display: flex;
-    font-size: 0.7rem;
-    font-weight: 700;
-    gap: 10px;
-    letter-spacing: 0.12em;
-    margin: 18px 0 8px;
-    text-transform: uppercase;
-    user-select: none;
-}
-
-.group-title::before {
-    color: var(--accent);
-    content: "▸";
-    display: inline-block;
-    flex-shrink: 0;
-    font-size: 0.65rem;
-    transition: transform 150ms ease;
-    width: 0.8em;
-}
-
-.group details[open] > .group-title::before {
-    transform: rotate(90deg);
-}
-
-.group-title:hover {
-    color: var(--text);
-}
-
-.group-title::after {
-    background: var(--border);
-    content: "";
-    flex: 1;
-    height: 1px;
-}
-
-.group-title:focus-visible {
-    border-radius: 4px;
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-}
-
-.grid {
-    display: grid;
-    gap: 6px;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    margin: 0 auto;
-    max-width: none;
-    width: 100%;
-}
-
-@media (max-width: 540px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-.card {
-    align-items: stretch;
-    appearance: none;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: inherit;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    font: inherit;
-    gap: 4px;
-    min-height: 40px;
-    outline: none;
-    padding: 6px 8px;
-    position: relative;
-    text-align: left;
-    transition: background 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
-}
-
-.card-top {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.card:hover {
-    background: var(--surface-hover);
-    border-color: rgba(167, 139, 250, 0.3);
-    transform: translateY(-2px);
-}
-
-.card:focus-visible {
-    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
-}
-
-.card.playing {
-    background: rgba(167, 139, 250, 0.12);
-    border-color: rgba(167, 139, 250, 0.5);
-    box-shadow: 0 0 18px var(--accent-glow);
-    transform: scale(1.02);
-}
-
-.card-icon {
-    flex-shrink: 0;
-    font-size: 1.1rem;
-    line-height: 1;
-    transition: transform 150ms ease;
-    width: 1.25rem;
-}
-
-.card.playing .card-icon {
-    animation: bounce 0.4s ease;
-}
-
-@keyframes bounce {
-    0%, 100% { transform: scale(1); }
-    40% { transform: scale(1.2); }
-    70% { transform: scale(0.95); }
-}
-
-.card-title {
-    font-size: 0.72rem;
-    font-weight: 600;
-    line-height: 1.2;
-    margin: 0;
-    min-width: 0;
-}
-
-.key {
-    align-items: center;
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 4px;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
-    color: var(--muted);
-    display: inline-flex;
-    flex-shrink: 0;
-    font-family: ui-monospace, "SF Mono", monospace;
-    font-size: 0.6rem;
-    font-weight: 600;
-    height: 18px;
-    justify-content: center;
-    margin: 0;
-    min-width: 18px;
-    padding: 0 4px;
-    transition: color 150ms ease, border-color 150ms ease;
-}
-
-.card:hover .key,
-.card.playing .key {
-    border-color: rgba(167, 139, 250, 0.4);
-    color: var(--accent);
-}
-
-.waves {
-    bottom: 4px;
-    display: flex;
-    gap: 2px;
-    justify-content: center;
-    left: 50%;
-    opacity: 0;
-    position: absolute;
-    transform: translateX(-50%);
-    transition: opacity 150ms ease;
-}
-
-.card.playing .waves {
-    opacity: 1;
-}
-
-.waves span {
-    animation: wave 0.6s ease-in-out infinite;
-    background: var(--accent);
-    border-radius: 2px;
-    display: block;
-    height: 10px;
-    width: 2px;
-}
-
-.waves span:nth-child(2) { animation-delay: 0.1s; }
-.waves span:nth-child(3) { animation-delay: 0.2s; }
-.waves span:nth-child(4) { animation-delay: 0.15s; }
-
-@keyframes wave {
-    0%, 100% { height: 4px; opacity: 0.5; }
-    50% { height: 10px; opacity: 1; }
-}
-</style>
+<style>*,*::before,*::after{box-sizing:border-box}
+:root{--bg:#0c0a14;--surface:rgba(255,255,255,.04);--surface-hover:rgba(255,255,255,.08);--border:rgba(255,255,255,.08);--text:#f0eef5;--muted:#8b849c;--accent:#a78bfa;--accent-glow:rgba(167,139,250,.35)}
+body{background:var(--bg);background-image:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(120,80,220,.25),transparent),radial-gradient(ellipse 60% 40% at 100% 100%,rgba(236,72,153,.12),transparent);color:var(--text);font-family:system-ui,sans-serif;margin:0;min-height:100vh;padding:20px 16px 32px;touch-action:manipulation}
+header{margin:0 auto 12px;text-align:center}
+header h1{font-size:clamp(1.4rem,3vw,1.75rem);font-weight:700;letter-spacing:-.02em;margin:0 0 6px}
+header p{color:var(--muted);font-size:.85rem;margin:0}
+.group{margin:0}
+.group+.group{margin-top:4px}
+.group details>summary{list-style:none}
+.group details>summary::-webkit-details-marker{display:none}
+.group-title{align-items:center;color:var(--muted);cursor:pointer;display:flex;font-size:.7rem;font-weight:700;gap:10px;letter-spacing:.12em;margin:18px 0 8px;text-transform:uppercase;user-select:none}
+.group-title::before{color:var(--accent);content:"▸";display:inline-block;flex-shrink:0;font-size:.65rem;transition:transform 150ms ease;width:.8em}
+.group details[open]>.group-title::before{transform:rotate(90deg)}
+.group-title:hover{color:var(--text)}
+.group-title::after{background:var(--border);content:"";flex:1;height:1px}
+.group-title:focus-visible{border-radius:4px;outline:2px solid var(--accent);outline-offset:2px}
+.grid{display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));width:100%}
+@media (max-width:540px){.grid{grid-template-columns:repeat(2,1fr)}}
+.card{align-items:stretch;appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:inherit;cursor:pointer;display:flex;flex-direction:column;font:inherit;gap:4px;min-height:40px;outline:none;padding:6px 8px;position:relative;text-align:left;transition:background 150ms ease,border-color 150ms ease,transform 150ms ease,box-shadow 150ms ease}
+.card-top{align-items:center;display:flex;justify-content:space-between;width:100%}
+.card:hover{background:var(--surface-hover);border-color:rgba(167,139,250,.3);transform:translateY(-2px)}
+.card:focus-visible{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
+.card.playing{background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.5);box-shadow:0 0 18px var(--accent-glow);transform:scale(1.02)}
+.card-icon{flex-shrink:0;font-size:1.1rem;line-height:1;width:1.25rem}
+.card.playing .card-icon{animation:bounce .4s ease}
+@keyframes bounce{0%,100%{transform:scale(1)}40%{transform:scale(1.2)}70%{transform:scale(.95)}}
+.card-title{font-size:.72rem;font-weight:600;line-height:1.2;margin:0;min-width:0}
+.key{align-items:center;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);border-radius:4px;box-shadow:0 1px 0 rgba(0,0,0,.4);color:var(--muted);display:inline-flex;flex-shrink:0;font-family:ui-monospace,monospace;font-size:.6rem;font-weight:600;height:18px;justify-content:center;margin:0;min-width:18px;padding:0 4px;transition:color 150ms ease,border-color 150ms ease}
+.card:hover .key,.card.playing .key{border-color:rgba(167,139,250,.4);color:var(--accent)}
+.waves{bottom:4px;display:flex;gap:2px;justify-content:center;left:50%;opacity:0;position:absolute;transform:translateX(-50%);transition:opacity 150ms ease}
+.card.playing .waves{opacity:1}
+.waves span{animation:wave .6s ease-in-out infinite;background:var(--accent);border-radius:2px;display:block;height:10px;width:2px}
+.waves span:nth-child(2){animation-delay:.1s}
+.waves span:nth-child(3){animation-delay:.2s}
+.waves span:nth-child(4){animation-delay:.15s}
+@keyframes wave{0%,100%{height:4px;opacity:.5}50%{height:10px;opacity:1}}</style>
 </head>
 <body>
-
 <header>
-    <h1>Arent's Soundboard</h1>
-    <p>Click a button or press its key to play</p>
+<h1>Arent's Soundboard</h1>
+<p>Click a button or press its key to play</p>
 </header>
-
-<main id="board"></main>
-
-<script>
-const groups = [
-    {
-        title: "Hollandse Klassiekers",
-        sounds: [
-            { key: "1", title: "Nu Even Niet", icon: "☕", url: "https://www.myinstants.com/media/sounds/cup-a-soup-reclame-sjors-ruben-van-der-meer-mp3cut.mp3" },
-            { key: "2", title: "Maxim Mand", icon: "🧺", url: "https://www.myinstants.com/media/sounds/omroep-maxim-mandje-audiotrimmer.mp3" },
-            { key: "3", title: "Geen Neus", icon: "👃", url: "https://www.myinstants.com/media/sounds/ik-heb-helemaal-geen-neus.mp3" },
-            { key: "4", title: "Zo Praten Tegen Mij", icon: "😤", url: "https://www.myinstants.com/media/sounds/jij-komt-hier-zo-praten-tegen-mij.mp3" },
-            { key: "5", title: "Luchtalarm", icon: "🚨", url: "https://www.myinstants.com/media/sounds/luchtalarm_yxq1SAP.mp3" },
-            { key: "6", title: "Dutch Anthem F1", icon: "🇳🇱", url: "https://www.myinstants.com/media/sounds/dutch-anthem-f1-podium.mp3" },
-            { key: "7", title: "Water?!", icon: "💧", url: "https://www.myinstants.com/media/sounds/water-wil-je-me-vergiftigen-doit.mp3" },
-            { key: "8", title: "Krakakaka", icon: "🔫", url: "https://www.myinstants.com/media/sounds/krakaka_1.mp3" },
-            { key: "9", title: "Harley Gang", icon: "🏍️", url: "https://www.myinstants.com/media/sounds/harleygag2.mp3" },
-            { key: "0", title: "Korter", icon: "✂️", url: "https://www.myinstants.com/media/sounds/korter-2.mp3" },
-            { key: "a", title: "Fred Tiffo", icon: "🏎️", url: "https://www.myinstants.com/media/sounds/fred-tiffo.mp3" },
-        ],
-    },
-    {
-        title: "Memes & Reacties",
-        sounds: [
-            { key: "b", title: "Wrong Answer", icon: "❌", url: "https://www.myinstants.com/media/sounds/wrong-answer-buzzer.mp3" },
-            { key: "c", title: "Windows XP Error", icon: "🪟", url: "https://www.myinstants.com/media/sounds/erro.mp3" },
-            { key: "d", title: "Disappointed", icon: "😞", url: "https://www.myinstants.com/media/sounds/spongebob-disappointed-sound-effect.mp3" },
-            { key: "e", title: "And It's Gone", icon: "💸", url: "https://www.myinstants.com/media/sounds/and-its-gone.mp3" },
-            { key: "f", title: "Crickets", icon: "🦗", url: "https://www.myinstants.com/media/sounds/crickets-chirping.mp3" },
-            { key: "g", title: "Fart", icon: "💨", url: "https://www.myinstants.com/media/sounds/dry-fart.mp3" },
-            { key: "h", title: "Loud Fart", icon: "💩", url: "https://www.myinstants.com/media/sounds/fart_2.mp3" },
-            { key: "i", title: "applause", icon: "🤬", url: "https://www.myinstants.com/media/sounds/applause-4.mp3" },
-            { key: "j", title: "Sitcom Laughing", icon: "😂", url: "https://www.myinstants.com/media/sounds/sitcom-laughing-and-applause.mp3" },
-            { key: "k", title: "Vine Boom", icon: "💥", url: "https://www.myinstants.com/media/sounds/vine-boom.mp3" },
-            { key: "l", title: "Bacon Shots Fired", icon: "🥓", url: "https://www.myinstants.com/media/sounds/shots-fired_3.mp3" },
-            { key: "m", title: "NO GOD! PLEASE NO!", icon: "😱", url: "https://www.myinstants.com/media/sounds/no-god-please-no-noooooooooo.mp3" },
-            { key: "n", title: "Screaming Goat", icon: "🐐", url: "https://www.myinstants.com/media/sounds/screaming-goat.mp3" },
-            { key: "o", title: "Rick Rolled!", icon: "😂", url: "https://www.myinstants.com/media/sounds/epic.mp3" },
-            { key: "p", title: "5 Minutes Later", icon: "🕒", url: "https://www.myinstants.com/media/sounds/5-minutes-later-spongebob.mp3" },
-        ],
-    },
-    {
-        title: "Tunes & Jingles",
-        sounds: [
-            { key: "q", title: "Michael Jackson Hee Hee", icon: "🕺", url: "https://www.myinstants.com/media/sounds/michael-jackson-hee-hee.mp3" },
-            { key: "r", title: "Sad", icon: "🎤", url: "https://www.myinstants.com/media/sounds/sadtrombone.swf.mp3" },
-            { key: "s", title: "MLG Air Horn", icon: "📯", url: "https://www.myinstants.com/media/sounds/mlg-airhorn.mp3" },
-            { key: "t", title: "Curb Your Enthusiasm", icon: "🎬", url: "https://www.myinstants.com/media/sounds/curb-your-enthusiasm.mp3" },
-            { key: "u", title: "Ka-Ching", icon: "💰", url: "https://www.myinstants.com/media/sounds/cash-register-kaching-sound-effect-hd.mp3" },
-            { key: "v", title: "X files", icon: "🍕", url: "https://www.myinstants.com//media/sounds/expedientes-secretos-x-musica22.mp3" },
-            { key: "w", title: "Mario Kart Start", icon: "🏁", url: "https://www.myinstants.com/media/sounds/mariostart.mp3" },
-            { key: "x", title: "Drum Roll", icon: "🥁", url: "https://www.myinstants.com/media/sounds/drum-roll-gaming-sound-effect-hd.mp3" },
-            { key: "y", title: "Pirates of the Caribbean", icon: "🏴‍☠️", url: "https://www.myinstants.com/media/sounds/pirates-mp3cut_xxOvJfH.mp3" },
-        ],
-    },
-];
-
-const board = document.getElementById("board");
-const audioCache = new Map();
-const cards = [];
-
-for (const group of groups) {
-    const section = document.createElement("section");
-    section.className = "group";
-
-    const details = document.createElement("details");
-    details.open = true;
-
-    const summary = document.createElement("summary");
-    summary.className = "group-title";
-    summary.textContent = group.title;
-
-    const grid = document.createElement("div");
-    grid.className = "grid";
-
-    details.appendChild(summary);
-    details.appendChild(grid);
-    section.appendChild(details);
-    board.appendChild(section);
-
-    for (const sound of group.sounds) {
-        const card = document.createElement("button");
-        card.type = "button";
-        card.className = "card";
-        card.dataset.key = sound.key;
-        card.dataset.sound = sound.url;
-        card.innerHTML = `
-            <div class="card-top">
-                <span class="card-icon">${sound.icon}</span>
-                <span class="key">${sound.key.toUpperCase()}</span>
-            </div>
-            <h3 class="card-title">${sound.title}</h3>
-            <div class="waves" aria-hidden="true">
-                <span></span><span></span><span></span><span></span>
-            </div>
-        `;
-        grid.appendChild(card);
-        cards.push(card);
-    }
-}
-
-function playCard(card) {
-    const key = card.dataset.key;
-
-    if (!audioCache.has(key)) {
-        audioCache.set(key, new Audio(card.dataset.sound));
-    }
-
-    const audio = audioCache.get(key);
-    audio.currentTime = 0;
-    audio.play();
-
-    card.classList.add("playing");
-    setTimeout(() => card.classList.remove("playing"), 300);
-}
-
-cards.forEach(card => {
-    card.addEventListener("click", () => playCard(card));
-});
-
-document.addEventListener("keydown", event => {
-    if (event.metaKey || event.ctrlKey || event.altKey) {
-        return;
-    }
-
-    const card = cards.find(item => item.dataset.key === event.key.toLowerCase());
-
-    if (card) {
-        event.preventDefault();
-        playCard(card);
-    }
-});
-</script>
-
+<main id="board">
+<section class="group"><details open><summary class="group-title">Hollandse Klassiekers</summary><div class="grid"><button type="button" class="card" data-key="1" data-sound="https://www.myinstants.com/media/sounds/cup-a-soup-reclame-sjors-ruben-van-der-meer-mp3cut.mp3"><div class="card-top"><span class="card-icon">☕</span><span class="key">1</span></div><h3 class="card-title">Nu Even Niet</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="2" data-sound="https://www.myinstants.com/media/sounds/omroep-maxim-mandje-audiotrimmer.mp3"><div class="card-top"><span class="card-icon">🧺</span><span class="key">2</span></div><h3 class="card-title">Maxim Mand</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="3" data-sound="https://www.myinstants.com/media/sounds/ik-heb-helemaal-geen-neus.mp3"><div class="card-top"><span class="card-icon">👃</span><span class="key">3</span></div><h3 class="card-title">Geen Neus</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="4" data-sound="https://www.myinstants.com/media/sounds/jij-komt-hier-zo-praten-tegen-mij.mp3"><div class="card-top"><span class="card-icon">😤</span><span class="key">4</span></div><h3 class="card-title">Zo Praten Tegen Mij</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="5" data-sound="https://www.myinstants.com/media/sounds/luchtalarm_yxq1SAP.mp3"><div class="card-top"><span class="card-icon">🚨</span><span class="key">5</span></div><h3 class="card-title">Luchtalarm</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="6" data-sound="https://www.myinstants.com/media/sounds/dutch-anthem-f1-podium.mp3"><div class="card-top"><span class="card-icon">🇳🇱</span><span class="key">6</span></div><h3 class="card-title">Dutch Anthem F1</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="7" data-sound="https://www.myinstants.com/media/sounds/water-wil-je-me-vergiftigen-doit.mp3"><div class="card-top"><span class="card-icon">💧</span><span class="key">7</span></div><h3 class="card-title">Water?!</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="8" data-sound="https://www.myinstants.com/media/sounds/krakaka_1.mp3"><div class="card-top"><span class="card-icon">🔫</span><span class="key">8</span></div><h3 class="card-title">Krakakaka</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="9" data-sound="https://www.myinstants.com/media/sounds/harleygag2.mp3"><div class="card-top"><span class="card-icon">🏍️</span><span class="key">9</span></div><h3 class="card-title">Harley Gang</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="0" data-sound="https://www.myinstants.com/media/sounds/korter-2.mp3"><div class="card-top"><span class="card-icon">✂️</span><span class="key">0</span></div><h3 class="card-title">Korter</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="a" data-sound="https://www.myinstants.com/media/sounds/fred-tiffo.mp3"><div class="card-top"><span class="card-icon">🏎️</span><span class="key">A</span></div><h3 class="card-title">Fred Tiffo</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button></div></details></section>
+<section class="group"><details open><summary class="group-title">Memes & Reacties</summary><div class="grid"><button type="button" class="card" data-key="b" data-sound="https://www.myinstants.com/media/sounds/wrong-answer-buzzer.mp3"><div class="card-top"><span class="card-icon">❌</span><span class="key">B</span></div><h3 class="card-title">Wrong Answer</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="c" data-sound="https://www.myinstants.com/media/sounds/erro.mp3"><div class="card-top"><span class="card-icon">🪟</span><span class="key">C</span></div><h3 class="card-title">Windows XP Error</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="d" data-sound="https://www.myinstants.com/media/sounds/spongebob-disappointed-sound-effect.mp3"><div class="card-top"><span class="card-icon">😞</span><span class="key">D</span></div><h3 class="card-title">Disappointed</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="e" data-sound="https://www.myinstants.com/media/sounds/and-its-gone.mp3"><div class="card-top"><span class="card-icon">💸</span><span class="key">E</span></div><h3 class="card-title">And It's Gone</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="f" data-sound="https://www.myinstants.com/media/sounds/crickets-chirping.mp3"><div class="card-top"><span class="card-icon">🦗</span><span class="key">F</span></div><h3 class="card-title">Crickets</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="g" data-sound="https://www.myinstants.com/media/sounds/dry-fart.mp3"><div class="card-top"><span class="card-icon">💨</span><span class="key">G</span></div><h3 class="card-title">Fart</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="h" data-sound="https://www.myinstants.com/media/sounds/fart_2.mp3"><div class="card-top"><span class="card-icon">💩</span><span class="key">H</span></div><h3 class="card-title">Loud Fart</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="i" data-sound="https://www.myinstants.com/media/sounds/applause-4.mp3"><div class="card-top"><span class="card-icon">🤬</span><span class="key">I</span></div><h3 class="card-title">applause</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="j" data-sound="https://www.myinstants.com/media/sounds/sitcom-laughing-and-applause.mp3"><div class="card-top"><span class="card-icon">😂</span><span class="key">J</span></div><h3 class="card-title">Sitcom Laughing</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="k" data-sound="https://www.myinstants.com/media/sounds/vine-boom.mp3"><div class="card-top"><span class="card-icon">💥</span><span class="key">K</span></div><h3 class="card-title">Vine Boom</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="l" data-sound="https://www.myinstants.com/media/sounds/shots-fired_3.mp3"><div class="card-top"><span class="card-icon">🥓</span><span class="key">L</span></div><h3 class="card-title">Bacon Shots Fired</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="m" data-sound="https://www.myinstants.com/media/sounds/no-god-please-no-noooooooooo.mp3"><div class="card-top"><span class="card-icon">😱</span><span class="key">M</span></div><h3 class="card-title">NO GOD! PLEASE NO!</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="n" data-sound="https://www.myinstants.com/media/sounds/screaming-goat.mp3"><div class="card-top"><span class="card-icon">🐐</span><span class="key">N</span></div><h3 class="card-title">Screaming Goat</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="o" data-sound="https://www.myinstants.com/media/sounds/epic.mp3"><div class="card-top"><span class="card-icon">😂</span><span class="key">O</span></div><h3 class="card-title">Rick Rolled!</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="p" data-sound="https://www.myinstants.com/media/sounds/5-minutes-later-spongebob.mp3"><div class="card-top"><span class="card-icon">🕒</span><span class="key">P</span></div><h3 class="card-title">5 Minutes Later</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button></div></details></section>
+<section class="group"><details open><summary class="group-title">Tunes & Jingles</summary><div class="grid"><button type="button" class="card" data-key="q" data-sound="https://www.myinstants.com/media/sounds/michael-jackson-hee-hee.mp3"><div class="card-top"><span class="card-icon">🕺</span><span class="key">Q</span></div><h3 class="card-title">Michael Jackson Hee Hee</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="r" data-sound="https://www.myinstants.com/media/sounds/sadtrombone.swf.mp3"><div class="card-top"><span class="card-icon">🎤</span><span class="key">R</span></div><h3 class="card-title">Sad</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="s" data-sound="https://www.myinstants.com/media/sounds/mlg-airhorn.mp3"><div class="card-top"><span class="card-icon">📯</span><span class="key">S</span></div><h3 class="card-title">MLG Air Horn</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="t" data-sound="https://www.myinstants.com/media/sounds/curb-your-enthusiasm.mp3"><div class="card-top"><span class="card-icon">🎬</span><span class="key">T</span></div><h3 class="card-title">Curb Your Enthusiasm</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="u" data-sound="https://www.myinstants.com/media/sounds/cash-register-kaching-sound-effect-hd.mp3"><div class="card-top"><span class="card-icon">💰</span><span class="key">U</span></div><h3 class="card-title">Ka-Ching</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="v" data-sound="https://www.myinstants.com/media/sounds/expedientes-secretos-x-musica22.mp3"><div class="card-top"><span class="card-icon">🍕</span><span class="key">V</span></div><h3 class="card-title">X files</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="w" data-sound="https://www.myinstants.com/media/sounds/mariostart.mp3"><div class="card-top"><span class="card-icon">🏁</span><span class="key">W</span></div><h3 class="card-title">Mario Kart Start</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="x" data-sound="https://www.myinstants.com/media/sounds/drum-roll-gaming-sound-effect-hd.mp3"><div class="card-top"><span class="card-icon">🥁</span><span class="key">X</span></div><h3 class="card-title">Drum Roll</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button><button type="button" class="card" data-key="y" data-sound="https://www.myinstants.com/media/sounds/pirates-mp3cut_xxOvJfH.mp3"><div class="card-top"><span class="card-icon">🏴‍☠️</span><span class="key">Y</span></div><h3 class="card-title">Pirates of the Caribbean</h3><div class="waves" aria-hidden="true"><span></span><span></span><span></span><span></span></div></button></div></details></section>
+</main>
+<script>const c=new Map();
+function p(el){const k=el.dataset.key;if(!c.has(k))c.set(k,new Audio(el.dataset.sound));const a=c.get(k);a.currentTime=0;a.play();el.classList.add("playing");setTimeout(()=>el.classList.remove("playing"),300)}
+document.getElementById("board").addEventListener("click",e=>{const el=e.target.closest(".card");if(el)p(el)});
+document.addEventListener("keydown",e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;const el=document.querySelector('.card[data-key="'+e.key.toLowerCase()+'"]');if(el){e.preventDefault();p(el)}});</script>
 </body>
 </html>
