@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arent's Soundboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+    --bg: #0c0a14;
+    --surface: rgba(255, 255, 255, 0.04);
+    --surface-hover: rgba(255, 255, 255, 0.08);
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #f0eef5;
+    --muted: #8b849c;
+    --accent: #a78bfa;
+    --accent-glow: rgba(167, 139, 250, 0.35);
+}
+
+body {
+    background: var(--bg);
+    background-image:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 80, 220, 0.25), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(236, 72, 153, 0.12), transparent);
+    color: var(--text);
+    font-family: "DM Sans", system-ui, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    padding: 20px 16px 32px;
+}
+
+header {
+    margin: 0 auto 12px;
+    max-width: none;
+    text-align: center;
+}
+
+header h1 {
+    font-size: clamp(1.4rem, 3vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+}
+
+header p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.group-title {
+    align-items: center;
+    color: var(--muted);
+    display: flex;
+    font-size: 0.7rem;
+    font-weight: 700;
+    gap: 10px;
+    letter-spacing: 0.12em;
+    margin: 18px 0 8px;
+    text-transform: uppercase;
+}
+
+.group-title::after {
+    background: var(--border);
+    content: "";
+    flex: 1;
+    height: 1px;
+}
+
+.grid {
+    display: grid;
+    gap: 6px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    margin: 0 auto;
+    max-width: none;
+    width: 100%;
+}
+
+.card {
+    align-items: center;
+    appearance: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    font: inherit;
+    gap: 8px;
+    min-height: 40px;
+    outline: none;
+    padding: 6px 10px;
+    position: relative;
+    text-align: left;
+    transition: background 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+}
+
+.card:hover {
+    background: var(--surface-hover);
+    border-color: rgba(167, 139, 250, 0.3);
+    transform: translateY(-2px);
+}
+
+.card:focus-visible {
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+}
+
+.card.playing {
+    background: rgba(167, 139, 250, 0.12);
+    border-color: rgba(167, 139, 250, 0.5);
+    box-shadow: 0 0 18px var(--accent-glow);
+    transform: scale(1.02);
+}
+
+.card-icon {
+    flex-shrink: 0;
+    font-size: 1.1rem;
+    line-height: 1;
+    transition: transform 150ms ease;
+    width: 1.25rem;
+}
+
+.card.playing .card-icon {
+    animation: bounce 0.4s ease;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    40% { transform: scale(1.2); }
+    70% { transform: scale(0.95); }
+}
+
+.card-title {
+    flex: 1;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 0;
+    min-width: 0;
+}
+
+.key {
+    align-items: center;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    color: var(--muted);
+    display: inline-flex;
+    flex-shrink: 0;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 0.6rem;
+    font-weight: 600;
+    height: 18px;
+    justify-content: center;
+    margin: 0;
+    min-width: 18px;
+    padding: 0 4px;
+    transition: color 150ms ease, border-color 150ms ease;
+}
+
+.card:hover .key,
+.card.playing .key {
+    border-color: rgba(167, 139, 250, 0.4);
+    color: var(--accent);
+}
+
+.waves {
+    bottom: 4px;
+    display: flex;
+    gap: 2px;
+    justify-content: center;
+    left: auto;
+    opacity: 0;
+    position: absolute;
+    right: 36px;
+    transition: opacity 150ms ease;
+}
+
+.card.playing .waves {
+    opacity: 1;
+}
+
+.waves span {
+    animation: wave 0.6s ease-in-out infinite;
+    background: var(--accent);
+    border-radius: 2px;
+    display: block;
+    height: 10px;
+    width: 2px;
+}
+
+.waves span:nth-child(2) { animation-delay: 0.1s; }
+.waves span:nth-child(3) { animation-delay: 0.2s; }
+.waves span:nth-child(4) { animation-delay: 0.15s; }
+
+@keyframes wave {
+    0%, 100% { height: 4px; opacity: 0.5; }
+    50% { height: 10px; opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Arent's Soundboard</h1>
+    <p>Click a button or press its key to play</p>
+</header>
+
+<main id="board"></main>
+
+<script>
+const groups = [
+    {
+        title: "Hollandse Klassiekers",
+        sounds: [
+            { key: "1", title: "Nu Even Niet", icon: "☕", url: "https://www.myinstants.com/media/sounds/cup-a-soup-reclame-sjors-ruben-van-der-meer-mp3cut.mp3" },
+            { key: "2", title: "Maxim Mand", icon: "🧺", url: "https://www.myinstants.com/media/sounds/omroep-maxim-mandje-audiotrimmer.mp3" },
+            { key: "3", title: "Geen Neus", icon: "👃", url: "https://www.myinstants.com/media/sounds/ik-heb-helemaal-geen-neus.mp3" },
+            { key: "4", title: "Zo Praten Tegen Mij", icon: "😤", url: "https://www.myinstants.com/media/sounds/jij-komt-hier-zo-praten-tegen-mij.mp3" },
+            { key: "5", title: "Luchtalarm", icon: "🚨", url: "https://www.myinstants.com/media/sounds/luchtalarm_yxq1SAP.mp3" },
+            { key: "6", title: "Dutch Anthem F1", icon: "🇳🇱", url: "https://www.myinstants.com/media/sounds/dutch-anthem-f1-podium.mp3" },
+            { key: "7", title: "Water?!", icon: "💧", url: "https://www.myinstants.com/media/sounds/water-wil-je-me-vergiftigen-doit.mp3" },
+            { key: "8", title: "Krakakaka", icon: "🔫", url: "https://www.myinstants.com/media/sounds/krakaka_1.mp3" },
+            { key: "9", title: "Harley Gang", icon: "🏍️", url: "https://www.myinstants.com/media/sounds/harleygag2.mp3" },
+            { key: "0", title: "Korter", icon: "✂️", url: "https://www.myinstants.com/media/sounds/korter-2.mp3" },
+            { key: "a", title: "Fred Tiffo", icon: "🏎️", url: "https://www.myinstants.com/media/sounds/fred-tiffo.mp3" },
+        ],
+    },
+    {
+        title: "Memes & Reacties",
+        sounds: [
+            { key: "b", title: "Wrong Answer", icon: "❌", url: "https://www.myinstants.com/media/sounds/wrong-answer-buzzer.mp3" },
+            { key: "c", title: "Windows XP Error", icon: "🪟", url: "https://www.myinstants.com/media/sounds/erro.mp3" },
+            { key: "d", title: "Disappointed", icon: "😞", url: "https://www.myinstants.com/media/sounds/spongebob-disappointed-sound-effect.mp3" },
+            { key: "e", title: "And It's Gone", icon: "💸", url: "https://www.myinstants.com/media/sounds/and-its-gone.mp3" },
+            { key: "f", title: "Crickets", icon: "🦗", url: "https://www.myinstants.com/media/sounds/crickets-chirping.mp3" },
+            { key: "g", title: "Fart", icon: "💨", url: "https://www.myinstants.com/media/sounds/dry-fart.mp3" },
+            { key: "h", title: "Loud Fart", icon: "💩", url: "https://www.myinstants.com/media/sounds/fart_2.mp3" },
+            { key: "i", title: "applause", icon: "🤬", url: "https://www.myinstants.com/media/sounds/applause-4.mp3" },
+            { key: "j", title: "Sitcom Laughing", icon: "😂", url: "https://www.myinstants.com/media/sounds/sitcom-laughing-and-applause.mp3" },
+            { key: "k", title: "Vine Boom", icon: "💥", url: "https://www.myinstants.com/media/sounds/vine-boom.mp3" },
+            { key: "l", title: "Bacon Shots Fired", icon: "🥓", url: "https://www.myinstants.com/media/sounds/shots-fired_3.mp3" },
+            { key: "m", title: "NO GOD! PLEASE NO!", icon: "😱", url: "https://www.myinstants.com/media/sounds/no-god-please-no-noooooooooo.mp3" },
+            { key: "n", title: "Screaming Goat", icon: "🐐", url: "https://www.myinstants.com/media/sounds/screaming-goat.mp3" },
+            { key: "o", title: "Rick Rolled!", icon: "😂", url: "https://www.myinstants.com/media/sounds/epic.mp3" },
+            { key: "p", title: "5 Minutes Later", icon: "🕒", url: "https://www.myinstants.com/media/sounds/5-minutes-later-spongebob.mp3" },
+        ],
+    },
+    {
+        title: "Tunes & Jingles",
+        sounds: [
+            { key: "q", title: "Michael Jackson Hee Hee", icon: "🕺", url: "https://www.myinstants.com/media/sounds/michael-jackson-hee-hee.mp3" },
+            { key: "r", title: "Sad", icon: "🎤", url: "https://www.myinstants.com/media/sounds/sadtrombone.swf.mp3" },
+            { key: "s", title: "MLG Air Horn", icon: "📯", url: "https://www.myinstants.com/media/sounds/mlg-airhorn.mp3" },
+            { key: "t", title: "Curb Your Enthusiasm", icon: "🎬", url: "https://www.myinstants.com/media/sounds/curb-your-enthusiasm.mp3" },
+            { key: "u", title: "Ka-Ching", icon: "💰", url: "https://www.myinstants.com/media/sounds/cash-register-kaching-sound-effect-hd.mp3" },
+            { key: "v", title: "X files", icon: "🍕", url: "https://www.myinstants.com//media/sounds/expedientes-secretos-x-musica22.mp3" },
+            { key: "w", title: "Mario Kart Start", icon: "🏁", url: "https://www.myinstants.com/media/sounds/mariostart.mp3" },
+            { key: "x", title: "Drum Roll", icon: "🥁", url: "https://www.myinstants.com/media/sounds/drum-roll-gaming-sound-effect-hd.mp3" },
+            { key: "y", title: "Pirates of the Caribbean", icon: "🏴‍☠️", url: "https://www.myinstants.com/media/sounds/pirates-mp3cut_xxOvJfH.mp3" },
+        ],
+    },
+];
+
+const board = document.getElementById("board");
+const audioCache = new Map();
+const cards = [];
+
+for (const group of groups) {
+    const heading = document.createElement("h2");
+    heading.className = "group-title";
+    heading.textContent = group.title;
+    board.appendChild(heading);
+
+    const grid = document.createElement("div");
+    grid.className = "grid";
+    board.appendChild(grid);
+
+    for (const sound of group.sounds) {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "card";
+        card.dataset.key = sound.key;
+        card.dataset.sound = sound.url;
+        card.innerHTML = `
+            <span class="card-icon">${sound.icon}</span>
+            <h3 class="card-title">${sound.title}</h3>
+            <span class="key">${sound.key.toUpperCase()}</span>
+            <div class="waves" aria-hidden="true">
+                <span></span><span></span><span></span><span></span>
+            </div>
+        `;
+        grid.appendChild(card);
+        cards.push(card);
+    }
+}
+
+function playCard(card) {
+    const key = card.dataset.key;
+
+    if (!audioCache.has(key)) {
+        audioCache.set(key, new Audio(card.dataset.sound));
+    }
+
+    const audio = audioCache.get(key);
+    audio.currentTime = 0;
+    audio.play();
+
+    card.classList.add("playing");
+    setTimeout(() => card.classList.remove("playing"), 300);
+}
+
+cards.forEach(card => {
+    card.addEventListener("click", () => playCard(card));
+});
+
+document.addEventListener("keydown", event => {
+    if (event.metaKey || event.ctrlKey || event.altKey) {
+        return;
+    }
+
+    const card = cards.find(item => item.dataset.key === event.key.toLowerCase());
+
+    if (card) {
+        event.preventDefault();
+        playCard(card);
+    }
+});
+</script>
+
+</body>
+</html>
