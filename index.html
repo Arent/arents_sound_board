@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background:#0c0a14">
 <head>
 <meta charset="UTF-8">
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js")</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Soundboard">
@@ -10,7 +12,7 @@
 <title>Arent's Soundboard</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.svg">
-<style>*,*::before,*::after{box-sizing:border-box}
+<style>html{background:#0c0a14;color-scheme:dark}*,*::before,*::after{box-sizing:border-box}
 :root{--bg:#0c0a14;--surface:rgba(255,255,255,.04);--surface-hover:rgba(255,255,255,.08);--border:rgba(255,255,255,.08);--text:#f0eef5;--muted:#8b849c;--accent:#a78bfa;--accent-glow:rgba(167,139,250,.35)}
 body{background:var(--bg);background-image:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(120,80,220,.25),transparent),radial-gradient(ellipse 60% 40% at 100% 100%,rgba(236,72,153,.12),transparent);color:var(--text);font-family:system-ui,sans-serif;margin:0;min-height:100vh;padding:20px 16px 32px;touch-action:manipulation}
 header{margin:0 auto 12px;text-align:center}
@@ -104,7 +106,6 @@ const a=c.get(k);a.currentTime=0;a.play().catch(()=>{});
 el.classList.add("playing");setTimeout(()=>el.classList.remove("playing"),300)}
 document.getElementById("board").addEventListener("click",e=>{const el=e.target.closest(".card");if(el)p(el)});
 document.addEventListener("keydown",e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;const el=document.querySelector('.card[data-key="'+e.key.toLowerCase()+'"]');if(el){e.preventDefault();p(el)}});
-if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js");
 </script>
 </body>
 </html>
