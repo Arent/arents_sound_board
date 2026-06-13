@@ -1,4 +1,4 @@
-const CACHE = "soundboard-v4";
+const CACHE = "soundboard-v6";
 const SHELL = ["./index.html", "./icon.svg", "./sw.js"];
 
 self.addEventListener("install", (e) => {
