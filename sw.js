@@ -1,5 +1,5 @@
-const CACHE = "soundboard-v3";
-const SHELL = ["./index.html", "./manifest.json", "./icon.svg", "./sw.js"];
+const CACHE = "soundboard-v4";
+const SHELL = ["./index.html", "./icon.svg", "./sw.js"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
